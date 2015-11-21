@@ -15,9 +15,10 @@ module Tieba
 
 		def self.download_img(url, pagenum)
 			fetch_img_url(url, pagenum)
+			`mkdir image`
 			@img_url.each_with_index do |url,index|
 				open(url) {|f|
-				   File.open("#{index}.jpg","wb") do |file|
+				   File.open("./image/#{index}.jpg","wb") do |file|
 				     file.puts f.read
 				   end
 				}
