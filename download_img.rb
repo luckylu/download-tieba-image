@@ -7,6 +7,9 @@ module Tieba
 			@img_url = []
 			(1..pagenum).each do |num|
 				doc = Nokogiri::HTML(open(url+"?pn=#{num}"))
+				doc.xpath('//title').each do |title|
+				  @folder_name = title.content
+				end
 				doc.css('.d_post_content>img.BDE_Image').each do|content|
 					@img_url.push content.attribute('src').to_s.sub(/w\%3D580\/sign.*\//,"pic\/item\/")
 				end
@@ -15,10 +18,10 @@ module Tieba
 
 		def self.download_img(url, pagenum)
 			fetch_img_url(url, pagenum)
-			`mkdir image`
+			`mkdir "#@folder_name"`
 			@img_url.each_with_index do |url,index|
 				open(url) {|f|
-				   File.open("./image/#{index}.jpg","wb") do |file|
+				   File.open("./#@folder_name/#{index}.jpg","wb") do |file|
 				     file.puts f.read
 				   end
 				}
